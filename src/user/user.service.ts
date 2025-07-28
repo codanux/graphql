@@ -26,8 +26,12 @@ export class UserService {
   findAll() {
     return this.prismaService.user.findMany({
       include: {
-        posts: true,
-      }
+        posts: {
+          include: {
+            categories: true,
+          },
+        },
+      },
     });
   }
 
@@ -43,7 +47,6 @@ export class UserService {
       data: {
         name: updateUserInput.name,
         email: updateUserInput.email,
-
       },
       include: {
         posts: true,

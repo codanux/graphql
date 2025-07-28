@@ -12,30 +12,44 @@ export class PostService {
 
   create(createPostInput: CreatePostInput) {
     return this.prismaService.post.create({
-      data: createPostInput,
+      data: {
+        title: createPostInput.title,
+        authorId: createPostInput.authorId,
+        categories: {
+          connect: createPostInput.categories.map(id => ({ id }))
+        },
+      },
+      include: {
+        categories: true,
+        author: true,
+      },
     });
   }
 
   findAll() {
-    return this.prismaService.post.findMany();
+    return this.prismaService.post.findMany({
+      include: {
+        categories: true,
+        author: true,
+      },
+    });
   }
 
   findOne(id: number) {
     return this.prismaService.post.findUnique({
       where: { id },
+      include: {
+        categories: true,
+        author: true,
+      },
     });
   }
 
   update(id: number, updatePostInput: UpdatePostInput) {
-    return this.prismaService.post.update({
-      where: { id },
-      data: updatePostInput,
-    });
+    return `This action updates a #${id} post`;
   }
 
   remove(id: number) {
-    return this.prismaService.post.delete({
-      where: { id },
-    });
+    return `This action removes a #${id} post`;
   }
 }
